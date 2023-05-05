@@ -1,0 +1,108 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+html {
+    background-color: #19191a;
+    font-size: calc(10px + 2vmin);
+    color: white;
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+p {
+    font-size: 18px;
+    font-weight: 400
+}
+
+.btn-primary {
+    padding: 10px 32px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 18px;
+    background-color: #7c30ff;
+    transition: .3s ease-in-out;
+    cursor: pointer;
+    text-transform: uppercase
+}
+
+.btn-primary:hover {
+    transition: .3s ease-in-out;
+    background-color: #253341
+}
+
+.btn-gradient {
+    padding: 10px 32px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 18px;
+    background-color: #7c30ff;
+    transition: .3s ease-in-out;
+    cursor: pointer;
+    text-transform: uppercase
+}
+
+.btn-gradient:hover {
+    transition: .3s ease-in-out;
+    background-color: #253341
+}
+
+.btn-gradient {
+    transition: background-image .5s ease;
+    background-image: linear-gradient(45deg,#7c30ff,#ff5e5e);
+    outline: 2px solid transparent
+}
+
+.btn-gradient:hover {
+    outline: 2px solid #ffbfff;
+    color: #ffbfff
+}
+
+.btn-gradient:disabled {
+    background-image: linear-gradient(45deg,#7c30ff,#ff5e5e);
+    opacity: .5;
+    cursor: default
+}
+
+.hover\:fill-gray-300:hover {
+    fill: #d1d5db
+}
+
+.hover\:opacity-80:hover {
+    opacity: .8
+}
+
+.Clip {
+    margin:0
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
