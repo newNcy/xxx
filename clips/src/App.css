@@ -15,7 +15,6 @@
 
 html {
     background-color: #19191a;
-    font-size: calc(10px + 2vmin);
     color: white;
 }
 
@@ -30,7 +29,8 @@ html {
 
 p {
     font-size: 18px;
-    font-weight: 400
+    font-weight: 400;
+    text-transform: uppercase
 }
 
 .btn-primary {
