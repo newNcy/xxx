@@ -55,7 +55,7 @@ function MyConnectButton() {
 
 function Section(props) {
     return (
-        <section id={props.id} className={`w-full min-h-80 flex flex-col gap-12 justify-start ${props.className}` } style={{ 
+        <section id={props.id} className={`w-full min-h-0 lg:min-h-80  p-2 lg:p-0flex flex-col gap-12 justify-start ${props.className}` } style={{ 
             paddingTop: props.offsetTop/2,
             }} >
             <div className="py-8 w-full h-full" style={{
@@ -80,18 +80,18 @@ function Roadmap({roadmap}) {
     return (
         <ol class="relative border-dashed border-gray-300 zendot text-gray-300">
             {roadmap.map((e, i)=> 
-            <li class="pl-4 roadmap pb-12" style={{
+            <li class="pl-4 roadmap pb-4" style={{
                         transition: transition_by_idx(i),
                     }}>
                 <div class="absolute w-5 h-5 bg-gray-100 rounded-full  -left-2 border-2 border-gray-300 roadmap-anchor"
                     style = {{ transition: transition_by_idx(i)}}
                 >
                 </div>
-                <div className="grid grid-cols-2 gap-3">
-                    <div className={`col-span-1 row-span-1 col-start-${(i%2+1)}`} >
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
+                    <div className={`col-span-1 row-span-1 col-start-${i%2==0?'1':'2'}`} >
                         <div className={`flex flex-row items-center gap-4 mb-4  `}>
                             <time class="text-sm font-normal leading-none ">Phase {i} </time>
-                            <h3 class="text-lg " > {e.title}</h3>
+                            <h3 class="text-xs lg:text-lg" > {e.title}</h3>
                         </div>
                         {
                             e.content.map( line => 
@@ -110,12 +110,12 @@ function Roadmap({roadmap}) {
 function Team({team}) {
     return (
         <div className="w-full scroll-container">
-            <div className="w-full grid grid-cols-4 gap-8 p-4 py-12">
+            <div className="w-full grid grid-cols-1 lg:grid-cols-4 gap-8 p-4 lg:p-12 py-12">
                 {
                     team.map((e,i) =>
-                        <div className="col-span-1 flex-col hover-out">
-                            <img className="avatar" src={team_img[i]} />
-                            <div className="flex flex-col items-center russo">
+                        <div className="col-span-1 flex flex-col md:flex-row lg:flex-col hover-out items-center">
+                            <img className="avatar w-40 lg:w-full lg:m-12" src={team_img[i]} />
+                            <div className="pl-4 lg:pl-0 flex flex-col items-center russo">
                                 <h3 className="">{e.name}</h3>
                                 <p>{e.intro}</p>
                             </div>
@@ -185,7 +185,12 @@ function Gallery({images, reverse, filter, sort, speed}) {
     return (
         <div className="gradient-overlay">
             <Swiper
-                slidesPerView={8}
+                slidesPerView={3}
+                breakpoints= {{
+                    768: {
+                        slidesPerView: 8
+                    }
+                }}
                 loop={true}
                 speed={speed? speed:1000}
                 allowTouchMove={false}
@@ -264,11 +269,23 @@ function Main() {
     return (
         <div className="bg-nft flex flex-col text-gray-100 items-center" >
             <div className="bg-nft w-full fixed top-0 flex flex-row items-center justify-center shadow " style={{zIndex:999}}>
-                <header className="navbar w-full flex  container  flex-row  py-2 justify-between center text-gray-0"  style={{ fontFamily: 'russo one,sans-serif', }}>
-                    <div className="flex flex-row gap-5 text-3xl ">
-                        <div className="text-4xl" > ZkPenguin</div>
+                <header className="p-4 lg:p-2 navbar w-full flex  container  flex-row  py-2 justify-between center text-gray-0"  style={{ fontFamily: 'russo one,sans-serif', }}>
+                    <div className="flex flex-row gap-2 text-3xl items-center">
+                        <div className="text-4xl pr-1" > ZkPenguin</div>
+                        <div className="text-sm" > live on </div>
+                        <div className="flex items-center">
+                            <svg className="w-0 lg:w-11 lg:h-6" width="45" height="25" viewBox="0 -5 45 35" fill="none" xmlns="http://www.w3.org/2000/svg"><mask id="mask0_104_1045" style={{maskType:'luminance'}} maskUnits="userSpaceOnUse" x="0" y="0" width="125" height="25">
+                                <path d="M125 0H0V25H125V0Z" fill="white"></path>
+                            </mask>
+                                <g mask="url(#mask0_104_1045)">
+                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M43.3913 12.2708L31.084 0V8.98437L18.8652 17.9792L31.084 17.9896V24.5365L43.3913 12.2708Z" fill="white"></path>
+                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M0 12.2656L12.3073 24.5313V15.6198L24.526 6.55208L12.3073 6.54167V0L0 12.2656Z" fill="white"></path>
+                                </g>
+                            </svg>
+                            <svg width="80" height="20" viewBox="0 0 267 67" fill="none" xmlns="http://www.w3.org/2000/svg" class="logo_logo__AXqd6"><g clip-path="url(#clip0_165_1900)"><path d="M195.748 67H180.263C161.693 67 146.601 51.9808 146.601 33.5C146.601 15.0192 161.693 0 180.263 0C198.834 0 213.926 15.0192 213.926 33.5V66.33H200.461V33.5C200.461 22.3892 191.428 13.4 180.263 13.4C169.098 13.4 160.066 22.3892 160.066 33.5C160.066 44.6108 169.098 53.6 180.263 53.6H195.748V67Z" fill="white"></path><path d="M119.67 66.33H106.205V33.5C106.205 15.0192 121.297 0 139.868 0V13.4C128.703 13.4 119.67 22.3892 119.67 33.5V66.33Z" fill="white"></path><path d="M59.0776 67C40.5071 67 25.415 51.9808 25.415 33.5C25.415 15.0192 40.5071 0 59.0776 0C77.6481 0 92.7401 15.0192 92.7401 33.5V40.2H54.0282V26.8H78.0969C75.2917 18.9833 67.8298 13.4 59.0776 13.4C47.9128 13.4 38.8801 22.3892 38.8801 33.5C38.8801 44.6108 47.9128 53.6 59.0776 53.6C65.8101 53.6 72.0938 50.25 75.8527 44.6667L87.0175 52.1483C80.7899 61.4167 70.3545 67 59.0776 67Z" fill="white"></path><path d="M267 13.4004H234.123V66.3304H267V13.4004Z" fill="white"></path></g><defs><clipPath id="clip0_165_1900"><rect width="267" height="67" fill="white"></rect></clipPath></defs></svg>
+                        </div>
                     </div>
-                    <div className="flex flex-row gap-4 items-center ">
+                    <div className="flex flex-row gap-4 items-center hidden lg:flex lg:w-fit">
                         <Link to="about"/>
                         <Link to="roadmap"/>
                         <Link to="gallery"/>
@@ -289,7 +306,7 @@ function Main() {
                 <Section id="about" offsetTop={headerHeight} style={{
                     paddingTop: headerHeight
                 }}>
-                    <div className="grid grid-cols-4 gap-6" style={{
+                    <div className="grid grid-cols-1 p-3 lg:grid-cols-4 gap-6" style={{
                     }}>
                         <div className="col-span-2 items-center justify-center flex flex-col h-full" >
                             <img className = "w-full" src={aboutImg} />
@@ -297,10 +314,10 @@ function Main() {
                         <div className="col-span-2 pt-2">
                             <h6 className="text-xl text-accent">about</h6>
                             <div className="title text-5xl my-4">About Zk Penguin (ZKP)</div>
-                            <About text={`ZKPENGUIN is a community-driven ZKSync NFT project . Unlike other collections, ZKPENGUIN's art is carefully designed to ensure that each NFT is unique and algorithmically generated from over 200 possible traits, including hats, clothing, expressions, and more, all depicting the most fashionable penguin possible.
+                            <About text={`ZKPENGUIN is a community-driven ZKSync NFT project . Unlike other collections, ZKPENGUIN's art is carefully designed to ensure that each NFT is unique depicting the most fashionable penguin possible.
 As a unique collection, ZKPENGUIN attracts collectors through rewards and practicality. Once the collection is sold out, owners have the opportunity claim $ZKPgn tokens, which have a variety of uses such as purchasing merchandise, voting rights, and listing on DEX.
 As the benchmark NFT collection on zkSync, ZKPENGUIN aims to be a leader in the NFT market. We not only want collectors to have beautiful NFTs but also aim to provide them with a valuable asset and a strong community through various rewards and practical features.
-Additionally, we plan to release the ZK Baby Penguins NFT & BTC Penguin NFT Collection, a unique set of NFTs designed exclusively for ZKPENGUIN holders, who will be eligible for a free mint of these NFTs.
+Additionally, we plan to release the ZK Baby Penguins NFT & BTC Penguin NFT Collection, a unique set of NFTs designed exclusively for ZKPENGUIN holders.Since our origin is in the zksync era, you can find some markings related to the zksync era on some rare zkpenguin.
 Overall, ZKPENGUIN is a unique NFT collection that aims to be the benchmark NFT collection on zkSync and build a strong community by providing more value to collectors through rewards and practical features.`}/>
 
                         </div>
