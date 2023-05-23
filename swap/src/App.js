@@ -53,6 +53,12 @@ function MyConnectButton() {
 
 }
 
+function Button({ onClick, children}) {
+    return (
+        <button onClick={onClick} className="bg-accent hover:bg-accent px-2 py1 rounded-lg"> {children} </button>
+    )
+}
+
 function Section(props) {
     return (
         <section id={props.id} className={`w-full min-h-0 lg:min-h-80  p-2 lg:p-0flex flex-col gap-12 justify-start ${props.className}` } style={{ 
@@ -291,6 +297,11 @@ function Main() {
                         <Link to="gallery"/>
                         <Link to="team"/>
                         <Link to="faq"/>
+                        <Button onClick={e=>{
+                            window.location.href = `https://twitter.com/intent/tweet?text=This%20is%20my%20proof%20of%20participation%20for%20%40zksyncpenguin%0A%0AA%20community-driven%20ZKSync%20NFT%20project%20coming%20on%20%23zkSync.%20Holders%20have%20the%20opportunity%20to%20claim%20%24ZKPgn%20tokens`
+                        }} > Register
+                            <FontAwesomeIcon className = "ml-2" icon={faTwitter} size="lg" />
+                        </Button>
                         <div className="flex flex-row items-center gap-3">
                             <a className="link ml-4" href="https://twitter.com/zksyncpenguin" target="_blank" rel="noopener noreferrer">
                                 <FontAwesomeIcon icon={faTwitter} size="lg" />
@@ -322,7 +333,7 @@ Overall, ZKPENGUIN is a unique NFT collection that aims to be the benchmark NFT 
 
                         </div>
                     </div>
-                </Section>
+                </Section> 
                 <Section id="roadmap" className="" offsetTop={headerHeight} >
                     <h3 className="text-4xl zendot  pb-3">Roadmap</h3>
                     <div className="my-8 px-2">
@@ -409,6 +420,7 @@ Overall, ZKPENGUIN is a unique NFT collection that aims to be the benchmark NFT 
                         <Collapse Q="5.Will future issues of BTC Penguin NFT require holders to pay a fee?" A="No need, we will inscribe your corresponding NFT on the BTC.You don't even have to spend gas, after inscription is completed, we will collect the holder's BTC address and send it directly to your BTC address "/>
                     </div>
                 </Section>
+                     
                 <div style={{height:'200px'}}>
                 </div>
                 <footer className="mt-12 p-12 items-center flex flex-col zendot">
