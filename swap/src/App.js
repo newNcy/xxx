@@ -55,7 +55,7 @@ function MyConnectButton() {
 
 function Button({ onClick, children}) {
     return (
-        <button onClick={onClick} className="bg-accent hover:bg-accent px-2 py1 rounded-lg"> {children} </button>
+        <button onClick={onClick} className="bg-accent hover:bg-deepAccent px-2 py1 rounded-lg transition duration-300"> {children} </button>
     )
 }
 
