@@ -30,7 +30,7 @@ import { ConnectButton } from "@rainbow-me/rainbowkit";
 import {Contract, utils} from "ethers";
 import images from './gallery';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTwitter, faTelegram } from '@fortawesome/free-brands-svg-icons';
+import { faTwitter, faTelegram , faDiscord } from '@fortawesome/free-brands-svg-icons';
 
 
 SwiperCore.use([Autoplay, Navigation]);
@@ -308,6 +308,9 @@ function Main() {
                             </a>
                             <a className="link ml-1" href="https://t.me/zkpenguin" target="_blank" rel="noopener noreferrer">
                                 <FontAwesomeIcon icon={faTelegram} size="lg" />
+                            </a>
+                            <a className="link ml-1" href="https://discord.com/invite/3T67T6KWG9" target="_blank" rel="noopener noreferrer">
+                                <FontAwesomeIcon icon={faDiscord} size="lg" />
                             </a>
                         </div>
                     </div>
