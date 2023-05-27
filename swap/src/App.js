@@ -53,9 +53,9 @@ function MyConnectButton() {
 
 }
 
-function Button({ onClick, children}) {
+function Button({ onClick, children , className}) {
     return (
-        <button onClick={onClick} className="bg-accent hover:bg-deepAccent px-2 py1 rounded-lg transition duration-300"> {children} </button>
+        <button onClick={onClick} className={`bg-accent hover:bg-deepAccent px-2 py1 rounded-lg transition duration-300 ${className}`}> {children} </button>
     )
 }
 
@@ -161,15 +161,16 @@ function Link ({to, className, children}) {
     )
 }
 
-function About({text}) {
-    let lines = text.split('\n')
+function About({text, children}) {
+    let in_text = text || children
+    let lines = in_text.split('\n')
     lines = lines.map(line=> line.split(/[,.!?]/).filter(Boolean))
     return (  
         <div className="russo text-gray-300 flex flex-col gap-2">
             { lines.map( line => 
             <p className="">
                 { line.map((sentence, i)=>
-                <span className="transition duration-300 border-accent hover:border-b-2 ">{`${sentence}${i < line.length-1?',':'.'}`}</span>
+                <span className="transition duration-300 border-accent hover:border-b-2 ">{`${sentence}${i < line.length-1?', ':'. '}`}</span>
                 )}
             </p>
             )}
@@ -263,6 +264,73 @@ function Collapse({Q, A}) {
     );
 }
 
+let eye = [
+    '^','$','%','@','#', '*','~', '!','+','&', 'x'
+]
+
+let mouse = [
+    'o','O','_','.'
+]
+
+let alpha = []
+
+for ( let e of  eye) {
+    for (let m of mouse) {
+        alpha.push(`(${e}${m}${e})`)
+    }
+}
+console.log(alpha)
+let penguage = {}
+let rpenguage = {} 
+let idx = 0
+for (let a = 97; a <= 122; ++ a) {
+    rpenguage[alpha[idx]] = a
+    penguage[a] = alpha[idx++]
+}
+for (let a = 48; a <= 57; ++ a) {
+    rpenguage[alpha[idx]] = a
+    penguage[a] = alpha[idx++]
+}
+
+let spec = [32, 44, 46, 63, 33]
+
+for (let a of spec) {
+    rpenguage[alpha[idx]] = a
+    penguage[a] = alpha[idx++]
+}
+
+
+
+console.log(penguage)
+console.log(rpenguage)
+
+// 编码函数
+function encode(text) {
+    const buffer = Buffer.from(text.trim().toLowerCase(), 'utf8');
+    console.log(buffer)
+    let out = []
+    buffer.map(a=> {
+        out.push(penguage[a] || '#####')
+    })
+    return out.join('')
+}
+
+// 解码函数
+function decode(encodedText) {
+    encodedText = encodedText.trim()
+    let out = []
+    while (encodedText.length >= 5) {
+        let code = encodedText.substring(0, 5)
+        if (rpenguage[code]) {
+            out.push(Buffer.from([rpenguage[code]]).toString())
+        } else {
+            out.push('#')
+        }
+        encodedText = encodedText.substring(5)
+    }
+
+    return out.join('')
+}
 
 function Main() {
     let [headerHeight, setHeaderHeight] = useState(0)
@@ -297,6 +365,7 @@ function Main() {
                         <Link to="gallery"/>
                         <Link to="team"/>
                         <Link to="faq"/>
+                        <Link to="penguage"/>
                         <Button onClick={e=>{
                             window.location.href = `https://twitter.com/intent/tweet?text=This%20is%20my%20proof%20of%20participation%20for%20%40zksyncpenguin%0A%0AA%20community-driven%20ZKSync%20NFT%20project%20coming%20on%20%23zkSync.%20Holders%20have%20the%20opportunity%20to%20claim%20%24ZKPgn%20tokens`
                         }} > Register
@@ -423,7 +492,30 @@ Overall, ZKPENGUIN is a unique NFT collection that aims to be the benchmark NFT 
                         <Collapse Q="5.Will future issues of BTC Penguin NFT require holders to pay a fee?" A="No need, we will inscribe your corresponding NFT on the BTC.You don't even have to spend gas, after inscription is completed, we will collect the holder's BTC address and send it directly to your BTC address "/>
                     </div>
                 </Section>
-                     
+                <Section id="penguage" className="" offsetTop={headerHeight} >
+                    <h3 className="text-4xl zendot">Comunicate with ZKPenguins</h3>
+                    <div className="m-4 flex flex-col gap-4">
+                        <About>Penguins can't make sounds like humans,so they express themselves with their faces, and if you don't understand that,then you need to learn about it</About>
+                        <div className="flex flex-col md:flex-row w-full items-center gap-4 justify-center">
+                            <textarea id="text-in" rows="3" type="text" className="w-full"/>
+                            <div className="flex flex-row md:flex-col gap-1">
+                                <Button className="" onClick={async e=> {
+                                    let text = document.querySelector('#text-in').value
+                                    document.querySelector("#text-out").value = encode(text)
+                                }}>
+                                    Penguage
+                                </Button>
+                                <Button onClick={async e=> {
+                                    let text = document.querySelector('#text-in').value
+                                    document.querySelector("#text-out").value = decode(text)
+                                }}>
+                                    English
+                                </Button>
+                            </div>
+                            <textarea id="text-out" rows="3" type="text" className="w-full"/>
+                        </div>
+                    </div>
+                </Section>
                 <div style={{height:'200px'}}>
                 </div>
                 <footer className="mt-12 p-12 items-center flex flex-col zendot">

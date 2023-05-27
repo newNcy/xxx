@@ -9,7 +9,8 @@ module.exports = {
     extend: {
         colors : {
             accent: '#ED7A46',
-            deepAccent: '#B55732'
+            deepAccent: '#B55732',
+            main: '#150F19',
         }
     },
   },

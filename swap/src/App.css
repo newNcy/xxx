@@ -2,7 +2,6 @@
   background-color: #150F19;
   font-family:Inter, sans-serif;
 }
-
 @keyframes scroll-left {
   0% { transform: translateX(0); } /* 初始位置 */
   100% { transform: translateX(-100%); } /* 从左向右滚动至末尾 */
@@ -148,6 +147,14 @@
 .min-h-80 {
     min-height:60vh;
 }
+
+input {
+    @apply border rounded-md focus:outline-none focus:border-accent
+}
+textarea {
+    @apply border rounded-md focus:outline-none focus:border-accent text-gray-500 items-center p-1
+}
+
 
 .gradient-overlay::before {
   left: 0;
