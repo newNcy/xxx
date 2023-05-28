@@ -31,6 +31,7 @@ import {Contract, utils} from "ethers";
 import images from './gallery';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTwitter, faTelegram , faDiscord } from '@fortawesome/free-brands-svg-icons';
+import { faCopy } from '@fortawesome/free-solid-svg-icons';
 
 
 SwiperCore.use([Autoplay, Navigation]);
@@ -55,7 +56,7 @@ function MyConnectButton() {
 
 function Button({ onClick, children , className}) {
     return (
-        <button onClick={onClick} className={`bg-accent hover:bg-deepAccent px-2 py1 rounded-lg transition duration-300 ${className}`}> {children} </button>
+        <button onClick={onClick} className={`bg-accent hover:bg-accentHover active:accentActive px-2 py1 rounded-lg transition duration-300 ${className}`}> {children} </button>
     )
 }
 
@@ -119,7 +120,7 @@ function Team({team}) {
             <div className="w-full grid grid-cols-1 lg:grid-cols-4 gap-8 p-4 lg:p-12 py-12">
                 {
                     team.map((e,i) =>
-                        <div className="col-span-1 flex flex-col md:flex-row lg:flex-col hover-out items-center">
+                        <div id ={`${i}`}  className="col-span-1 flex flex-col md:flex-row lg:flex-col hover-out items-center">
                             <img className="avatar w-40 lg:w-full lg:m-12" src={team_img[i]} />
                             <div className="pl-4 lg:pl-0 flex flex-col items-center russo">
                                 <h3 className="">{e.name}</h3>
@@ -337,6 +338,16 @@ function decode(encodedText) {
     return out.join('')
 }
 
+const TextAreaWithIcon = ({id, className, rows}) => {
+  return (
+    <div className="textarea-container w-full">
+      <textarea className={`textarea ${className}`} id={id} rows={rows}></textarea>
+      <div className="icon-container">
+      </div>
+    </div>
+  );
+};
+
 function Main() {
     let [headerHeight, setHeaderHeight] = useState(0)
 
@@ -502,7 +513,7 @@ Overall, ZKPENGUIN is a unique NFT collection that aims to be the benchmark NFT 
                     <div className="m-4 flex flex-col gap-4">
                         <About>Penguins can't make sounds like humans,so they express themselves in their own way, and if you don't understand that,then you need to learn about it</About>
                         <div className="flex flex-col md:flex-row w-full items-center gap-4 justify-center">
-                            <textarea id="text-in" rows="3" type="text" className="w-full"/>
+                            <TextAreaWithIcon id="text-in" rows="3" type="text" className="w-full"/>
                             <div className="flex flex-row md:flex-col gap-1">
                                 <Button className="" onClick={async e=> {
                                     let text = document.querySelector('#text-in').value
@@ -517,7 +528,7 @@ Overall, ZKPENGUIN is a unique NFT collection that aims to be the benchmark NFT 
                                     English
                                 </Button>
                             </div>
-                            <textarea id="text-out" rows="3" type="text" className="w-full"/>
+                            <TextAreaWithIcon id="text-out" rows="3" type="text" className="w-full"/>
                         </div>
                     </div>
                 </Section>

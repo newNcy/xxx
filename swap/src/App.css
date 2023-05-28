@@ -21,6 +21,27 @@
     -webkit-transition-timing-function: linear;
 }
 
+.textarea-container {
+  position: relative;
+}
+
+.textarea {
+  /* 设置文本区域的样式 */
+}
+
+.icon-container {
+  /* 设置图标容器的样式 */
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  margin: 8px;
+  @apply text-accent
+  /* 添加其他样式，例如背景色、边框等 */
+}
+.icon-container:hover {
+    @apply text-accentHover
+}
+
 .scroll-container {
      overflow: hidden;
 }
@@ -32,8 +53,16 @@
 .hover-out {
     @apply hover:scale-110 transform transition-transform duration-300;
 }
+
 .hover-out:hover {
     z-index: 998;
+}
+
+button {
+    @apply bg-accent
+}
+button:active {
+    @apply bg-accentActive
 }
 
 .App-logo {
