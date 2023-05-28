@@ -276,7 +276,7 @@ let alpha = []
 
 for ( let e of  eye) {
     for (let m of mouse) {
-        alpha.push(`(${e}${m}${e})`)
+        alpha.push(`${e}${m}`)
     }
 }
 console.log(alpha)
@@ -306,12 +306,16 @@ console.log(rpenguage)
 
 // 编码函数
 function encode(text) {
-    const buffer = Buffer.from(text.trim().toLowerCase(), 'utf8');
-    console.log(buffer)
+    text = text.trim().toLowerCase()
     let out = []
-    buffer.map(a=> {
-        out.push(penguage[a] || '#####')
-    })
+    for (let i = 0; i < text.length; ++ i) {
+        let code = text.charCodeAt(i)
+        if (penguage[code]) {
+            out.push(penguage[code])
+        } else {
+            out.push('#####')
+        }
+    }
     return out.join('')
 }
 
@@ -319,14 +323,15 @@ function encode(text) {
 function decode(encodedText) {
     encodedText = encodedText.trim()
     let out = []
-    while (encodedText.length >= 5) {
-        let code = encodedText.substring(0, 5)
+    let len = alpha[0].length
+    while (encodedText.length >= len) {
+        let code = encodedText.substring(0, len)
         if (rpenguage[code]) {
-            out.push(Buffer.from([rpenguage[code]]).toString())
+            out.push(String.fromCharCode([rpenguage[code]]))
         } else {
             out.push('#')
         }
-        encodedText = encodedText.substring(5)
+        encodedText = encodedText.substring(len)
     }
 
     return out.join('')
@@ -495,7 +500,7 @@ Overall, ZKPENGUIN is a unique NFT collection that aims to be the benchmark NFT 
                 <Section id="penguage" className="" offsetTop={headerHeight} >
                     <h3 className="text-4xl zendot">Comunicate with ZKPenguins</h3>
                     <div className="m-4 flex flex-col gap-4">
-                        <About>Penguins can't make sounds like humans,so they express themselves with their faces, and if you don't understand that,then you need to learn about it</About>
+                        <About>Penguins can't make sounds like humans,so they express themselves in their own way, and if you don't understand that,then you need to learn about it</About>
                         <div className="flex flex-col md:flex-row w-full items-center gap-4 justify-center">
                             <textarea id="text-in" rows="3" type="text" className="w-full"/>
                             <div className="flex flex-row md:flex-col gap-1">
