@@ -384,11 +384,13 @@ function Main() {
                         <Link to="team"/>
                         <Link to="faq"/>
                         <Link to="penguage"/>
-                        <Button onClick={e=>{
-                            window.location.href = `https://twitter.com/intent/tweet?text=This%20is%20my%20proof%20of%20participation%20for%20%40zksyncpenguin%0A%0AA%20community-driven%20ZKSync%20NFT%20project%20coming%20on%20%23zkSync.%20Holders%20have%20the%20opportunity%20to%20claim%20%24ZKPgn%20tokens`
+                        {false &&
+                                <Button onClick={e=>{
+                                    window.location.href = `https://twitter.com/intent/tweet?text=This%20is%20my%20proof%20of%20participation%20for%20%40zksyncpenguin%0A%0AA%20community-driven%20ZKSync%20NFT%20project%20coming%20on%20%23zkSync.%20Holders%20have%20the%20opportunity%20to%20claim%20%24ZKPgn%20tokens`
                         }} > Register
                             <FontAwesomeIcon className = "ml-2" icon={faTwitter} size="lg" />
                         </Button>
+                        }
                         <div className="flex flex-row items-center gap-3">
                             <a className="link ml-4" href="https://twitter.com/zksyncpenguin" target="_blank" rel="noopener noreferrer">
                                 <FontAwesomeIcon icon={faTwitter} size="lg" />
