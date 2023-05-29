@@ -1,5 +1,4 @@
 const importAll = (r) => {
-    console.log('r', r)
   let images = {};
     r.keys().forEach((key) => {
         images[key] = r(key);
@@ -10,7 +9,6 @@ const importAll = (r) => {
 const images = importAll(
   require.context('./gallery', false)
 );
-console.log(images)
 
 export default images;
 

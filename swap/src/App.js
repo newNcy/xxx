@@ -280,7 +280,6 @@ for ( let e of  eye) {
         alpha.push(`${e}${m}`)
     }
 }
-console.log(alpha)
 let penguage = {}
 let rpenguage = {} 
 let idx = 0
@@ -301,9 +300,12 @@ for (let a of spec) {
 }
 
 
-
-console.log(penguage)
-console.log(rpenguage)
+console.log(`
+  ________________________________________
+/ ~o@_*o&o$O@_*o@O^.&o%o#.&O&o~o@_*o&o^o#O\\
+\\$o&o^o&o#.#O*o$o&o$o*.@.%.@_#O$o#O       /
+  ----------------------------------------
+`)
 
 // 编码函数
 function encode(text) {
