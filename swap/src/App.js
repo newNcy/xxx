@@ -1,6 +1,6 @@
 import logo from './logo.svg';
 
-import { useEffect ,useState} from 'react';
+import { useEffect ,useState, useRef} from 'react';
 import a from 'react-anchor-link-smooth-scroll';
 import aboutImg from './about.png';
 import team1 from './team1.png';
@@ -33,6 +33,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTwitter, faTelegram , faDiscord } from '@fortawesome/free-brands-svg-icons';
 import { faCopy } from '@fortawesome/free-solid-svg-icons';
 
+import rom from './game/Antarctic_Adventure_tr.nes'
+
+import 'nes-js'
 
 SwiperCore.use([Autoplay, Navigation]);
 
@@ -145,18 +148,18 @@ function capitalizeFirstLetter(string) {
     return firstLetter + remainingLetters; // 拼接并返回结果
 }
 
+let scrollToId = (id) =>{
+    const headerOffset = document.querySelector('header').offsetHeight;
+    let elt = document.querySelector(id) 
+    if (elt) {
+        window.scrollTo({
+            top : elt.offsetTop - headerOffset + 3,
+            behavior : 'smooth'
+        })
+    }
+}
 
 function Link ({to, className, children}) {
-    let scrollToId = (id) =>{
-        const headerOffset = document.querySelector('header').offsetHeight;
-        let elt = document.querySelector(id) 
-        if (elt) {
-            window.scrollTo({
-                top : elt.offsetTop - headerOffset + 3,
-                behavior : 'smooth'
-            })
-        }
-    }
     return (
         <a className={`cursor-default link ${className}`} onClick={()=>scrollToId('#'+to)}>{capitalizeFirstLetter(to)}</a>
     )
@@ -353,6 +356,67 @@ const TextAreaWithIcon = ({id, className, rows}) => {
 function Main() {
     let [headerHeight, setHeaderHeight] = useState(0)
 
+    let [gameLoaded, setGameLoaded] = useState(false)
+    let nesVm = useRef(null)
+    let audio = useRef(null)
+
+    let {NesJs} = window
+    let putMessage = function() {}
+    let run = (buffer) => {
+        try {
+            var rom = new NesJs.Rom(buffer);
+        } catch(e) {
+            putMessage('');
+            putMessage(e.toString());
+            return;
+        }
+
+        putMessage('');
+        putMessage('Rom Header info');
+        putMessage(rom.header.dump());
+
+        let nes = new NesJs.Nes();
+        nesVm.current = nes
+        nes.addEventListener('fps', function(fps) {
+            //document.getElementById('fps').innerText = fps.toFixed(2);
+        });
+
+        nes.setRom(rom);
+
+        nes.setDisplay(new NesJs.Display(document.getElementById('mainCanvas')));
+
+        try {
+            nes.setAudio(new NesJs.Audio());
+            nes.hasAudio = true
+        } catch(e) {
+            putMessage('');
+            putMessage('Disables audio because this browser does not seems to support WebAudio.');
+        }
+
+        window.onkeydown = function(e) { nes.handleKeyDown(e); };
+        window.onkeyup = function(e) { nes.handleKeyUp(e); };
+
+        putMessage('');
+
+        putMessage('bootup.');
+        nes.bootup();
+
+        putMessage('runs.');
+        nes.run();
+    }
+
+
+    function start() {
+        if (gameLoaded)
+            return
+        setGameLoaded(true)
+        fetch(rom)
+            .then(response => response.arrayBuffer())
+            .then(data => {
+                run(data)
+
+            });
+    }
     useEffect(() => {
         const headerOffset = document.querySelector('header').offsetHeight;
         setHeaderHeight(headerOffset)
@@ -384,6 +448,7 @@ function Main() {
                         <Link to="team"/>
                         <Link to="faq"/>
                         <Link to="penguage"/>
+                        <Button onClick={e=>scrollToId('#penground')}>Penground</Button>
                         {false &&
                                 <Button onClick={e=>{
                                     window.location.href = `https://twitter.com/intent/tweet?text=This%20is%20my%20proof%20of%20participation%20for%20%40zksyncpenguin%0A%0AA%20community-driven%20ZKSync%20NFT%20project%20coming%20on%20%23zkSync.%20Holders%20have%20the%20opportunity%20to%20claim%20%24ZKPgn%20tokens`
@@ -533,6 +598,39 @@ Overall, ZKPENGUIN is a unique NFT collection that aims to be the benchmark NFT 
                                 </Button>
                             </div>
                             <TextAreaWithIcon id="text-out" rows="3" type="text" className="w-full"/>
+                        </div>
+                    </div>
+                </Section>
+                <Section id="penground" className="" offsetTop={headerHeight} >
+                    <h3 className="text-4xl zendot">Enjoy yourself in Penground</h3>
+                    <div className="w-full h-full flex flex-col items-center mt-12 py-6 justify-center">
+                        <div className="h-full flex flex-col items-center p-4 bg-blue-300">
+                            {gameLoaded && 
+                            <canvas id="mainCanvas" className="w-full" width="256" height="240" style={{
+                                width: '512px',
+                                height:'480px'}}>
+                            </canvas>
+                            }{
+                                !gameLoaded && 
+                                    <div className="w-full bg-black h-full items-center flex flex-col justify-center" style={{
+                                        width: '512px',
+                                        height:'480px'}}
+                                        onClick={e=>{
+                                            start()
+                                        }}
+                                    >
+                                        <p className="russo cursor-default" >&nbsp;click&nbsp;&nbsp; to &nbsp;&nbsp; start!&nbsp;</p>
+                                        <br/>
+                                        <div>
+                                            <p className="russo cursor-default" >⬆️  - speed up</p>
+                                            <p className="russo cursor-default" >⬅️   - left </p>
+                                            <p className="russo cursor-default" >➡️  - right</p>
+                                            <p className="russo cursor-default" >x &nbsp; -  &nbsp;jump </p>
+                                            <p className="russo cursor-default" >enter  -  select </p>
+                                        </div>
+                                    </div>
+
+                            }
                         </div>
                     </div>
                 </Section>
