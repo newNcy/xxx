@@ -163,9 +163,6 @@ function Main() {
             'mint'
         ],
     ]
-    for (let i = 0; i < 100; ++ i) {
-        data.push(data[0])
-    }
 
 
 

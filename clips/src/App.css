@@ -13,9 +13,10 @@
   }
 }
 
-html {
+html , body{
     background-color: #19191a;
     color: white;
+    height:100%;
 }
 
 .App-header {
@@ -31,6 +32,11 @@ p {
     font-size: 18px;
     font-weight: 400;
     text-transform: uppercase
+}
+
+section {
+    margin-top:100px;
+    height: 100vh
 }
 
 .btn-primary {
