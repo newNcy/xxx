@@ -1,0 +1,88 @@
+.App {
+    text-align: center;
+    @apply bg-main
+}
+
+
+.App-logo {
+    height: 40vmin;
+    pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .App-logo {
+        animation: App-logo-spin infinite 20s linear;
+    }
+}
+
+.inter {
+    font-family: 'Inter', sans-serif;
+}
+
+.mono {
+    font-family: 'Monomaniac One', sans-serif;
+}
+
+
+.rubik {
+    font-family: 'Rubik Mono One', sans-serif;
+}
+
+.russo {
+    font-family: 'Russo One', sans-serif;
+}
+
+.btn {
+    @apply px-2 py-1 text-center cursor-default transition duration-200
+}
+
+.btn-normal2{
+    @apply btn bg-primary2 rounded-lg
+}
+.btn-normal2:hover {
+    @apply bg-primary2Dark
+}
+
+
+.btn-left {
+    @apply bg-primary rounded-l-lg
+}
+
+.btn-left:hover {
+    @apply bg-primaryDark
+}
+
+.btn-right {
+    @apply bg-primary2 rounded-r-lg
+}
+
+.btn-right:hover {
+    @apply bg-primary2Dark 
+}
+.App-header {
+    background-color: #282c34;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: calc(10px + 2vmin);
+    color: white;
+}
+
+.tbl {
+    @apply p-4
+}
+
+.App-link {
+    color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
