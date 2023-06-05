@@ -33,13 +33,27 @@
 }
 
 .btn {
-    @apply px-2 py-1 text-center cursor-default transition duration-200
+    @apply px-2 py-1 text-center cursor-default transition duration-300 russo
+}
+
+.btn:hover {
+    @apply cursor-pointer
+}
+
+
+.btn-normal{
+    @apply btn bg-primary rounded-lg text-gray-700
+}
+
+.btn-normal:active {
+    @apply bg-primaryDark
 }
 
 .btn-normal2{
     @apply btn bg-primary2 rounded-lg
 }
-.btn-normal2:hover {
+
+.btn-normal2:active {
     @apply bg-primary2Dark
 }
 
@@ -48,7 +62,7 @@
     @apply bg-primary rounded-l-lg
 }
 
-.btn-left:hover {
+.btn-left:active {
     @apply bg-primaryDark
 }
 
@@ -56,9 +70,21 @@
     @apply bg-primary2 rounded-r-lg
 }
 
-.btn-right:hover {
+.btn-right:active{
     @apply bg-primary2Dark 
 }
+
+.input {
+    @apply rounded-lg outline-none px-3 py-1 bg-main focus:bg-main transition duration-200 text-gray-200
+}
+.input:focus{
+    @apply bg-main3 appearance-none
+}
+
+.label {
+    @apply w-2/5
+}
+
 .App-header {
     background-color: #282c34;
     min-height: 100vh;
@@ -85,4 +111,8 @@
     to {
         transform: rotate(360deg);
     }
+}
+
+table {
+    overflow: 'scroll'
 }
