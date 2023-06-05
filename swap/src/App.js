@@ -1,6 +1,6 @@
 import logo from './logo.svg';
 
-import { useEffect ,useState} from 'react';
+import { useEffect ,useState, useRef} from 'react';
 import a from 'react-anchor-link-smooth-scroll';
 import aboutImg from './about.png';
 import team1 from './team1.png';
@@ -30,8 +30,12 @@ import { ConnectButton } from "@rainbow-me/rainbowkit";
 import {Contract, utils} from "ethers";
 import images from './gallery';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTwitter, faTelegram } from '@fortawesome/free-brands-svg-icons';
+import { faTwitter, faTelegram , faDiscord } from '@fortawesome/free-brands-svg-icons';
+import { faCopy } from '@fortawesome/free-solid-svg-icons';
 
+import rom from './game/Antarctic_Adventure_tr.nes'
+
+import 'nes-js'
 
 SwiperCore.use([Autoplay, Navigation]);
 
@@ -53,9 +57,9 @@ function MyConnectButton() {
 
 }
 
-function Button({ onClick, children}) {
+function Button({ onClick, children , className}) {
     return (
-        <button onClick={onClick} className="bg-accent hover:bg-deepAccent px-2 py1 rounded-lg transition duration-300"> {children} </button>
+        <button onClick={onClick} className={`bg-accent hover:bg-accentHover active:accentActive px-2 py1 rounded-lg transition duration-300 ${className}`}> {children} </button>
     )
 }
 
@@ -119,7 +123,7 @@ function Team({team}) {
             <div className="w-full grid grid-cols-1 lg:grid-cols-4 gap-8 p-4 lg:p-12 py-12">
                 {
                     team.map((e,i) =>
-                        <div className="col-span-1 flex flex-col md:flex-row lg:flex-col hover-out items-center">
+                        <div id ={`${i}`}  className="col-span-1 flex flex-col md:flex-row lg:flex-col hover-out items-center">
                             <img className="avatar w-40 lg:w-full lg:m-12" src={team_img[i]} />
                             <div className="pl-4 lg:pl-0 flex flex-col items-center russo">
                                 <h3 className="">{e.name}</h3>
@@ -144,32 +148,33 @@ function capitalizeFirstLetter(string) {
     return firstLetter + remainingLetters; // 拼接并返回结果
 }
 
+let scrollToId = (id) =>{
+    const headerOffset = document.querySelector('header').offsetHeight;
+    let elt = document.querySelector(id) 
+    if (elt) {
+        window.scrollTo({
+            top : elt.offsetTop - headerOffset + 3,
+            behavior : 'smooth'
+        })
+    }
+}
 
 function Link ({to, className, children}) {
-    let scrollToId = (id) =>{
-        const headerOffset = document.querySelector('header').offsetHeight;
-        let elt = document.querySelector(id) 
-        if (elt) {
-            window.scrollTo({
-                top : elt.offsetTop - headerOffset + 3,
-                behavior : 'smooth'
-            })
-        }
-    }
     return (
         <a className={`cursor-default link ${className}`} onClick={()=>scrollToId('#'+to)}>{capitalizeFirstLetter(to)}</a>
     )
 }
 
-function About({text}) {
-    let lines = text.split('\n')
+function About({text, children}) {
+    let in_text = text || children
+    let lines = in_text.split('\n')
     lines = lines.map(line=> line.split(/[,.!?]/).filter(Boolean))
     return (  
         <div className="russo text-gray-300 flex flex-col gap-2">
             { lines.map( line => 
             <p className="">
                 { line.map((sentence, i)=>
-                <span className="transition duration-300 border-accent hover:border-b-2 ">{`${sentence}${i < line.length-1?',':'.'}`}</span>
+                <span className="transition duration-300 border-accent hover:border-b-2 ">{`${sentence}${i < line.length-1?', ':'. '}`}</span>
                 )}
             </p>
             )}
@@ -263,10 +268,155 @@ function Collapse({Q, A}) {
     );
 }
 
+let eye = [
+    '^','$','%','@','#', '*','~', '!','+','&', 'x'
+]
+
+let mouse = [
+    'o','O','_','.'
+]
+
+let alpha = []
+
+for ( let e of  eye) {
+    for (let m of mouse) {
+        alpha.push(`${e}${m}`)
+    }
+}
+let penguage = {}
+let rpenguage = {} 
+let idx = 0
+for (let a = 97; a <= 122; ++ a) {
+    rpenguage[alpha[idx]] = a
+    penguage[a] = alpha[idx++]
+}
+for (let a = 48; a <= 57; ++ a) {
+    rpenguage[alpha[idx]] = a
+    penguage[a] = alpha[idx++]
+}
+
+let spec = [32, 44, 46, 63, 33]
+
+for (let a of spec) {
+    rpenguage[alpha[idx]] = a
+    penguage[a] = alpha[idx++]
+}
+
+
+console.log(`
+  ________________________________________
+/ ~o@_*o&o$O@_*o@O^.&o%o#.&O&o~o@_*o&o^o#O\\
+\\$o&o^o&o#.#O*o$o&o$o*.@.%.@_#O$o#O       /
+  ----------------------------------------
+`)
+
+// 编码函数
+function encode(text) {
+    text = text.trim().toLowerCase()
+    let out = []
+    for (let i = 0; i < text.length; ++ i) {
+        let code = text.charCodeAt(i)
+        if (penguage[code]) {
+            out.push(penguage[code])
+        } else {
+            out.push('#####')
+        }
+    }
+    return out.join('')
+}
+
+// 解码函数
+function decode(encodedText) {
+    encodedText = encodedText.trim()
+    let out = []
+    let len = alpha[0].length
+    while (encodedText.length >= len) {
+        let code = encodedText.substring(0, len)
+        if (rpenguage[code]) {
+            out.push(String.fromCharCode([rpenguage[code]]))
+        } else {
+            out.push('#')
+        }
+        encodedText = encodedText.substring(len)
+    }
+
+    return out.join('')
+}
+
+const TextAreaWithIcon = ({id, className, rows}) => {
+  return (
+    <div className="textarea-container w-full">
+      <textarea className={`textarea ${className}`} id={id} rows={rows}></textarea>
+      <div className="icon-container">
+      </div>
+    </div>
+  );
+};
 
 function Main() {
     let [headerHeight, setHeaderHeight] = useState(0)
 
+    let [gameLoaded, setGameLoaded] = useState(false)
+    let nesVm = useRef(null)
+    let audio = useRef(null)
+
+    let {NesJs} = window
+    let putMessage = function() {}
+    let run = (buffer) => {
+        try {
+            var rom = new NesJs.Rom(buffer);
+        } catch(e) {
+            putMessage('');
+            putMessage(e.toString());
+            return;
+        }
+
+        putMessage('');
+        putMessage('Rom Header info');
+        putMessage(rom.header.dump());
+
+        let nes = new NesJs.Nes();
+        nesVm.current = nes
+        nes.addEventListener('fps', function(fps) {
+            //document.getElementById('fps').innerText = fps.toFixed(2);
+        });
+
+        nes.setRom(rom);
+
+        nes.setDisplay(new NesJs.Display(document.getElementById('mainCanvas')));
+
+        try {
+            nes.setAudio(new NesJs.Audio());
+            nes.hasAudio = true
+        } catch(e) {
+            putMessage('');
+            putMessage('Disables audio because this browser does not seems to support WebAudio.');
+        }
+
+        window.onkeydown = function(e) { nes.handleKeyDown(e); };
+        window.onkeyup = function(e) { nes.handleKeyUp(e); };
+
+        putMessage('');
+
+        putMessage('bootup.');
+        nes.bootup();
+
+        putMessage('runs.');
+        nes.run();
+    }
+
+
+    function start() {
+        if (gameLoaded)
+            return
+        setGameLoaded(true)
+        fetch(rom)
+            .then(response => response.arrayBuffer())
+            .then(data => {
+                run(data)
+
+            });
+    }
     useEffect(() => {
         const headerOffset = document.querySelector('header').offsetHeight;
         setHeaderHeight(headerOffset)
@@ -297,17 +447,24 @@ function Main() {
                         <Link to="gallery"/>
                         <Link to="team"/>
                         <Link to="faq"/>
-                        <Button onClick={e=>{
-                            window.location.href = `https://twitter.com/intent/tweet?text=This%20is%20my%20proof%20of%20participation%20for%20%40zksyncpenguin%0A%0AA%20community-driven%20ZKSync%20NFT%20project%20coming%20on%20%23zkSync.%20Holders%20have%20the%20opportunity%20to%20claim%20%24ZKPgn%20tokens`
+                        <Link to="penguage"/>
+                        <Button onClick={e=>scrollToId('#penground')}>Penground</Button>
+                        {false &&
+                                <Button onClick={e=>{
+                                    window.location.href = `https://twitter.com/intent/tweet?text=This%20is%20my%20proof%20of%20participation%20for%20%40zksyncpenguin%0A%0AA%20community-driven%20ZKSync%20NFT%20project%20coming%20on%20%23zkSync.%20Holders%20have%20the%20opportunity%20to%20claim%20%24ZKPgn%20tokens`
                         }} > Register
                             <FontAwesomeIcon className = "ml-2" icon={faTwitter} size="lg" />
                         </Button>
+                        }
                         <div className="flex flex-row items-center gap-3">
                             <a className="link ml-4" href="https://twitter.com/zksyncpenguin" target="_blank" rel="noopener noreferrer">
                                 <FontAwesomeIcon icon={faTwitter} size="lg" />
                             </a>
                             <a className="link ml-1" href="https://t.me/zkpenguin" target="_blank" rel="noopener noreferrer">
                                 <FontAwesomeIcon icon={faTelegram} size="lg" />
+                            </a>
+                            <a className="link ml-1" href="https://discord.com/invite/3T67T6KWG9" target="_blank" rel="noopener noreferrer">
+                                <FontAwesomeIcon icon={faDiscord} size="lg" />
                             </a>
                         </div>
                     </div>
@@ -420,7 +577,63 @@ Overall, ZKPENGUIN is a unique NFT collection that aims to be the benchmark NFT 
                         <Collapse Q="5.Will future issues of BTC Penguin NFT require holders to pay a fee?" A="No need, we will inscribe your corresponding NFT on the BTC.You don't even have to spend gas, after inscription is completed, we will collect the holder's BTC address and send it directly to your BTC address "/>
                     </div>
                 </Section>
-                     
+                <Section id="penguage" className="" offsetTop={headerHeight} >
+                    <h3 className="text-4xl zendot">Comunicate with ZKPenguins</h3>
+                    <div className="m-4 flex flex-col gap-4">
+                        <About>Penguins can't make sounds like humans,so they express themselves in their own way, and if you don't understand that,then you need to learn about it</About>
+                        <div className="flex flex-col md:flex-row w-full items-center gap-4 justify-center">
+                            <TextAreaWithIcon id="text-in" rows="3" type="text" className="w-full"/>
+                            <div className="flex flex-row md:flex-col gap-1">
+                                <Button className="" onClick={async e=> {
+                                    let text = document.querySelector('#text-in').value
+                                    document.querySelector("#text-out").value = encode(text)
+                                }}>
+                                    Penguage
+                                </Button>
+                                <Button onClick={async e=> {
+                                    let text = document.querySelector('#text-in').value
+                                    document.querySelector("#text-out").value = decode(text)
+                                }}>
+                                    English
+                                </Button>
+                            </div>
+                            <TextAreaWithIcon id="text-out" rows="3" type="text" className="w-full"/>
+                        </div>
+                    </div>
+                </Section>
+                <Section id="penground" className="" offsetTop={headerHeight} >
+                    <h3 className="text-4xl zendot">Enjoy yourself in Penground</h3>
+                    <div className="w-full h-full flex flex-col items-center mt-12 py-6 justify-center">
+                        <div className="h-full flex flex-col items-center p-4 bg-blue-300">
+                            {gameLoaded && 
+                            <canvas id="mainCanvas" className="w-full" width="256" height="240" style={{
+                                width: '512px',
+                                height:'480px'}}>
+                            </canvas>
+                            }{
+                                !gameLoaded && 
+                                    <div className="w-full bg-black h-full items-center flex flex-col justify-center" style={{
+                                        width: '512px',
+                                        height:'480px'}}
+                                        onClick={e=>{
+                                            start()
+                                        }}
+                                    >
+                                        <p className="russo cursor-default" >&nbsp;click&nbsp;&nbsp; to &nbsp;&nbsp; start!&nbsp;</p>
+                                        <br/>
+                                        <div>
+                                            <p className="russo cursor-default" >⬆️  - speed up</p>
+                                            <p className="russo cursor-default" >⬅️   - left </p>
+                                            <p className="russo cursor-default" >➡️  - right</p>
+                                            <p className="russo cursor-default" >x &nbsp; -  &nbsp;jump </p>
+                                            <p className="russo cursor-default" >enter  -  select </p>
+                                        </div>
+                                    </div>
+
+                            }
+                        </div>
+                    </div>
+                </Section>
                 <div style={{height:'200px'}}>
                 </div>
                 <footer className="mt-12 p-12 items-center flex flex-col zendot">
