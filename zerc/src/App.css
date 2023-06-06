@@ -1,3 +1,7 @@
+
+html {
+    height:100%
+}
 .App {
     text-align: center;
     @apply bg-main
@@ -9,6 +13,7 @@
     pointer-events: none;
 }
 
+thead th { position: sticky; top: 0; z-index: 50;background-color: rgb(64 64 64 / var(--tw-bg-opacity));}
 @media (prefers-reduced-motion: no-preference) {
     .App-logo {
         animation: App-logo-spin infinite 20s linear;
@@ -95,7 +100,22 @@
     font-size: calc(10px + 2vmin);
     color: white;
 }
-
+.table-wrap::-webkit-scrollbar {
+    display: block;
+    height: 5px;
+        width: 5px;
+    background-color: transparent;
+}
+::-webkit-scrollbar {
+    display: none;
+}
+::-webkit-scrollbar-corner {
+    display: none;
+}
+.table-wrap::-webkit-scrollbar-thumb {
+    background: linear-gradient(45deg,green,red);
+    border-radius: 10px;
+}
 .tbl {
     @apply p-4
 }
@@ -115,4 +135,57 @@
 
 table {
     overflow: 'scroll'
+}
+
+
+.tabMenu {
+    @apply bg-main;
+    border-radius: 30px;
+}
+
+td {
+    @apply px-4
+}
+
+.tabMenu .item {
+    display: inline-block;
+    font-size: 15px;
+    font-weight: 600;
+    color: #fff;
+    border-radius: 50px;
+    background: transparent;
+    position: relative;
+    z-index: 1;
+    padding: 8px 25px;
+    min-width: 40px;
+    text-align: center;
+    text-transform: uppercase;
+    cursor: pointer;
+}
+
+.tabMenu .active {
+    background: linear-gradient(79deg,green,red);
+    border-radius: 50px;
+}
+
+.progressBar{
+    background: hsla(0,0%,100%,.1);
+    border-radius: 60px;
+    height: 8px;
+    position: relative;
+}
+
+.progressBarInner{
+    background: linear-gradient(-294.72deg,#ff4581 9.05%,green 79.28%);
+    border-radius: 4px;
+    height: 8px;
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+@media only screen and (max-width: 1000px) {
+    .progressBar,.progressBarInner {
+        border-radius: 6px;
+        height: 6px
+    }
 }
