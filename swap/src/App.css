@@ -194,3 +194,8 @@ textarea {
   right: 0;
   background: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(28, 27, 55, 1)); /* 从右到左渐变的遮罩 */
 }
+
+.partner {
+    width: 48px;
+    height: 48px;
+}
