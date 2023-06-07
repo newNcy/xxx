@@ -260,6 +260,13 @@ function Main() {
         )
 
     }
+
+    function factor(p, t) {
+        let start = 2
+        let end = 1
+        return p * ((end-start)/t) + start
+    }
+
     let preMint = async () => {
         async function mint() { 
             let [id] = await providerContract.getIncriptionByTick(toMint)
@@ -434,7 +441,7 @@ function Main() {
                                                 <div className="flex flex-col  text-center justify-center ">
                                                     <p>{`${utils.formatEther(r.sp)}/${utils.formatEther(r.cap)}`}</p>
                                                     <div className='progressBar w-full'>
-                                                        <div className='progressBarInner' style={{ width: `${(r.sp/r.cap)*100}%` }}></div>
+                                                        <div className='progressBarInner' style={{ width: `${(r.sp/r.cap)*factor(r.sp, r.cap)*100}%` }}></div>
                                                     </div>
                                                 </div>
                                             </td>
