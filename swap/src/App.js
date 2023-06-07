@@ -8,6 +8,7 @@ import team2 from './team2.png';
 import team3 from './team3.png';
 import team4 from './team4.png';
 import r0 from './roadmap/0.png';
+import partnership_element from './partnership_element.png'
 
 import {Swiper, SwiperSlide} from 'swiper/react';
 import SwiperCore, { Autoplay, Navigation } from 'swiper';
@@ -579,7 +580,7 @@ Overall, ZKPENGUIN is a unique NFT collection that aims to be the benchmark NFT 
                 </Section>
                 <Section id="penguage" className="" offsetTop={headerHeight} >
                     <h3 className="text-4xl zendot">Comunicate with ZKPenguins</h3>
-                    <div className="m-4 flex flex-col gap-4">
+                    <div className="m-4 flex flex-col gap-4 py-12">
                         <About>Penguins can't make sounds like humans,so they express themselves in their own way, and if you don't understand that,then you need to learn about it</About>
                         <div className="flex flex-col md:flex-row w-full items-center gap-4 justify-center">
                             <TextAreaWithIcon id="text-in" rows="3" type="text" className="w-full"/>
@@ -601,9 +602,9 @@ Overall, ZKPENGUIN is a unique NFT collection that aims to be the benchmark NFT 
                         </div>
                     </div>
                 </Section>
-                <Section id="penground" className="" offsetTop={headerHeight} >
+                <Section id="penground" className="min-h-80" offsetTop={headerHeight} >
                     <h3 className="text-4xl zendot">Enjoy yourself in Penground</h3>
-                    <div className="w-full h-full flex flex-col items-center mt-12 py-6 justify-center">
+                    <div className="w-full h-full flex flex-col items-center py-12 mt-12 justify-center">
                         <div className="h-full flex flex-col items-center p-4 bg-blue-300">
                             {gameLoaded && 
                             <canvas id="mainCanvas" className="w-full" width="256" height="240" style={{
@@ -634,11 +635,19 @@ Overall, ZKPENGUIN is a unique NFT collection that aims to be the benchmark NFT 
                         </div>
                     </div>
                 </Section>
-                <div style={{height:'200px'}}>
-                </div>
-                <footer className="mt-12 p-12 items-center flex flex-col zendot">
-                    © 2023 zk Penguin
-                </footer>
+
+                <Section>
+                    <h3 className="text-4xl mx-2 zendot w-full">Partnership</h3>
+                    <footer className="p-12 items-center flex flex-col zendot gap-12">
+                        <div className="flex flex-col justify-center text-xl items-center mb-12" style={{height:''}}>
+                            <a className="flex flex-row justify-center items-center cursor-pointer" href="https://element.market">
+                                <img className="partner" src={partnership_element} />
+                                element marketplace
+                            </a>
+                        </div>
+                        © 2023 zk Penguin
+                    </footer>
+                </Section>
             </div>
         </div>
     )
