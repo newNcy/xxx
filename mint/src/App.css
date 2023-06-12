@@ -1,0 +1,146 @@
+
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+.norse {
+  font-family:norse, sans-serif;
+}
+
+.russo {
+     font-family: 'russo one', sans-serif;
+}
+
+.header {
+    background: linear-gradient(to bottom, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.0) 100%);
+}
+
+.content {
+    background: linear-gradient(to bottom, rgba(0,0,0,0.0) 0%, rgba(0,0,0,0.8) 100%);
+    z-index:999;
+    @apply flex flex-col justify-center items-center 
+}
+
+.front {
+    z-index:999;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.row {
+    @apply flex flex-row
+}
+
+.col {
+    @apply flex flex-col
+}
+
+.between {
+    @apply justify-between
+}
+
+
+.input {
+    height: 28px;
+    width: 64px;
+    @apply outline-none rounded-md px-2 bg-black border-gray-400 border-2  text-center appearance-none
+}
+
+.input:active{
+    @apply appearance-none
+}
+
+.btn {
+    @apply tag rounded-md text-center ease-in-out pt-1 transition ease-in-out duration-500
+}
+.btn:hover {
+    @apply text-gray-300 
+}
+
+
+.btn:disabled {
+    @apply border-gray-700 text-gray-700
+}
+
+
+.btn-normal {
+    @apply btn 
+}
+
+
+.mint-btn {
+    @apply transition  duration-300 border-2 rounded-md border-accent text-accent
+}
+
+.mint-btn:hover {
+    @apply border-accentActive text-white
+}
+
+.mint-btn:active {
+    @apply border-accentActive
+}
+
+
+.mint-btn:disabled {
+    @apply border-gray-700 text-gray-700 
+}
+
+
+.tag {
+    @apply border border-gray-400 px-2 rounded-md mx-2
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+.blink{
+  animation:  gradient 3s  infinite;
+
+}
+
+.msg {
+	transition-duration: 3s;
+}
+
+@keyframes gradient {
+  0%{
+    color: #777777
+  }
+  50%{
+    color: #bbbbbb
+  }
+  100% {
+    color: #777777
+  }
+}
