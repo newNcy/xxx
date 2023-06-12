@@ -842,10 +842,10 @@ function Main() {
                     <div className="mint-menu w-full h-full flex flex-col justify-end container pb-4" 
                     >
 
-                        <div className={`transition duration-500 basis-3/5 flex flex-col px-6 ${bgBlur?'':'blur-sm'} `} style={{
+                        <div className={`transition duration-500 basis-1/2 flex flex-col px-6 ${bgBlur?'':'blur-sm'} `} style={{
                             opacity: panelOp
                         }}>
-                        <div className={`w-full text-center basis-2/5 norse text-6xl pb-12 msg ${msgCls}`}>
+                        <div className={`w-full text-center basis-2/5 norse text-6xl pb-6 msg ${msgCls}`}>
                             {msg} 
                         </div>
 

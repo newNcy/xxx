@@ -5,6 +5,10 @@
 .App {
     height:100%
 }
+
+html {
+    background-color: #000000;
+}
 body {
   margin: 0;
   height:100vh;
