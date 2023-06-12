@@ -902,7 +902,7 @@ function Main() {
                         }
                     </div>
                 </div>
-                <div className="w-full flex flex-row justify-center items-center pb-4 text-gray-500">
+                <div className="bg-black w-full flex flex-row justify-center items-center pb-4 text-gray-500">
                     <span className="pb-1">©  </span><span className="norse">2023 zk Penguin</span>
                 </div>
             </div>
