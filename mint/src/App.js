@@ -35,7 +35,7 @@ const {abi} = require('./abi.json');
 SwiperCore.use([Autoplay, Navigation]);
 
 const { chains, provider } = configureChains(
-    [zkSync, zkSyncTestnet],
+    [zkSync],
     [publicProvider()]
 );
 
