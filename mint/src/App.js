@@ -854,7 +854,7 @@ function Main() {
                                 <span>{minted}/{total}</span>
                             </div>
                             <div className="bg-gray-700 w-full" style={{height:1}}>
-                                <div className="bg-accent rounded-r h-full" style={{ width:`${minted/total * factor(minted, total)* 100}%`, zIndex:999}}/>
+                                <div className="bg-accent rounded-r h-full" style={{ width:`${total > 0? minted/total * factor(minted, total)* 100 : 0}%`, zIndex:999}}/>
                             </div>
                             <div className="w-full h-full row justify-between gap-4 pt-6">
                                 <div className="w-1/2 col justify-center items-center border-gray-500 h-full border-2 p-4 rounded-md">
