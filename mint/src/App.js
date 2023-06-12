@@ -655,7 +655,7 @@ function Main() {
     let [bgBlur, setBgBlur] = useState(false)
     let [panelHeight, setPanelHeight] = useState(0)
     let [panelOp, setPanelOp] = useState(0)
-    let [minted, setMinted] = useState(6)
+    let [minted, setMinted] = useState(0)
     let [total, setTotal] = useState(0)
     let [mintPrice, setMintPrice] = useState(0)
     let [minting, setMinting] = useState(false)
