@@ -664,7 +664,7 @@ function Main() {
     let [mintAmount, setMintAmount] = useState(1)
     let [mintFee, setMintFee] = useState(0)
     let [wlClaimed, setWlClaimed] = useState(false)
-    let [paused, setPaused] = useState(false)
+    let [paused, setPaused] = useState(true)
     let [soldOut, setSoldout] = useState(false)
     let [msg, setMsg] = useState('hello world')
     let [msgCls, setMsgCls] = useState('opacity-0')
@@ -685,10 +685,11 @@ function Main() {
     }
 
     let updateMintProgress = async () => {
-        let p = await providerContract.paused()
-        setPaused(p)
-        let ps = [providerContract.minted(), providerContract.totalSupply()]
-        return new Promise(r=> {
+        try {
+            let p = await providerContract.paused()
+            setPaused(p)
+            let ps = [providerContract.minted(), providerContract.totalSupply()]
+            return new Promise(r=> {
             Promise.all(ps).then(cs=>{
                 setSoldout(cs[0].eq(cs[1]))
                 setMinted(cs[0].toNumber())
@@ -696,6 +697,8 @@ function Main() {
                 r(cs[0].eq(cs[1]))
             })
         })
+        }catch(e) {}
+        
     }
     function factor(p, t) {
         if (p>=t/2) return 1
@@ -727,6 +730,7 @@ function Main() {
                         }catch(e) {
                         }
                 }catch(e) {
+                    showMsg(e.message)
                 }
         }
     }
@@ -774,12 +778,15 @@ function Main() {
                 value: mintFee
             })
         }catch(e) {
-            res = e.error.data.message
+            console.log(e)
+            if (e.message)
+                res = e.data.message
         }
         let old = starSpeed
         setBgBlur(false)
         window.setVolume(0.4)
         lockScroll = true
+        chasingSteps = 8
         starSpeed = 0.03
 
         if (tx) {
@@ -803,7 +810,7 @@ function Main() {
             <div className={`front absolute  top-0 w-full h-full flex flex-col justify-between items-center  ${bgBlur ? 'backdrop-blur-sm' : ''} transition duration-700`}>
                 <div className="w-full text-sm md:text-3xl  text-gray-400 ">
                     <div className="w-full text-sm md:text-xl bg-red-100 gap-12 flex flex-col header items-center text-gray-400 ">
-                        <div className="norse p-6 w-full flex flex-row justify-end">
+                        <div className="norse p-6 w-full flex flex-row justify-end ">
                             <div style={{ opacity: panelOp }} className="row gap-6 ">
                                 {isWhitelisted &&
                                 <div className="btn text-accent broder-accent">
@@ -856,8 +863,8 @@ function Main() {
                                     </div>
                                 </div>
                                 <div className="text-gray-400 w-1/2  norse p-4 flex flex-col gap-6 justify-between">
-                                    <span className="text-md md:text-6xl">Guide Your Penguin</span>
-                                    <div className="text-2xl px-3">
+                                    <span className="text-3xl xl:text-6xl">Guide Your Penguin</span>
+                                    <div className="text-xl xl:2xl px-3">
                                         {isWhitelisted && 
                                         <p className="text-accent">whitelist : freemint x <span className="text-white">[1]</span> 
                                             {wlClaimed && 
@@ -878,12 +885,12 @@ function Main() {
                                                 setTimeout(updateMintMenu, 100)
                                             }}/>
                                         </div>
-                                        <div className="text-3xl w-full text-right">
+                                        <div className="text-xl w-full text-right">
                                             total: {utils.formatEther(mintFee)}{isWhitelisted && !wlClaimed &&  <span className="text-green-500">(${utils.formatEther(mintPrice)* (mintAmount)}-${utils.formatEther(mintPrice)})</span>}Ξ
                                         </div>
                                     </div>
                                     <div className="w-full flex flex-row gap-2 px-2">
-                                        <button className={`mint-btn w-full ${minting? 'cursor-wait':''}` } disabled={(soldOut || paused)}  onClick={onMint}>
+                                        <button className={`mint-btn w-full ${minting? 'cursor-wait':''}` } disabled={(minting || soldOut || paused)}  onClick={onMint}>
                                             {paused ? 'not start' : soldOut? 'sold out': 'mint'}
                                         </button>
                                         <div className="btn w-full row justify-center">
