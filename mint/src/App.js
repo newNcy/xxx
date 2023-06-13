@@ -57,6 +57,10 @@ let panelHeightC = 0
 let starSpeed = 0.001
 let lockScroll = false
 let chasingSteps = 50
+let cameraY = 0
+let updateScene = true
+let scale = 30
+let half = window.innerHeight*window.devicePixelRatio/scale/2.5
 
 async function sleep(ms) { return new Promise(r=>setTimeout(r, ms))}
 
@@ -184,21 +188,27 @@ function shuffleArray(array) {
     return array;
 }
 
-function Gallery({ images, reverse, filter, sort, speed }) {
+function Gallery({ images, reverse, filter, sort, speed , direction}) {
     SwiperCore.use([Autoplay]);
     return (
-        <div className="h-fit row" style={{zIndex:999}}>
+        <div className="h-full" style={{zIndex:999}}>
             <Swiper
-                slidesPerView={2}
+                slidesPerView={1}
                 loop={true}
                 speed={speed ? speed : 2000}
                 allowTouchMove={false}
                 spaceBetween={0}
                 centeredSlides = {true}
-        autoplay={{
+                autoplay={{
                     delay: 0,
                     disableOnInteraction: false,
                     reverseDirection: reverse,
+                }}
+
+                breakpoints = { {
+                    768: {
+                        slidesPerView: 2
+                    }
                 }}
             >
 
@@ -567,7 +577,6 @@ async function setupCanvas() {
     })
 
     let cameraX = 0
-    let cameraY = 0
 
     ele.addEventListener('mousemove', (e) => {
         //console.log(e)
@@ -579,18 +588,34 @@ async function setupCanvas() {
         //camera.position.y = cameraY
     })
 
-    let scale = 30
-    let half = window.innerHeight*window.devicePixelRatio/scale/2.5
+    let lastY = null
+    ele.addEventListener('touchmove', event=> {
+        if (!lastY) {
+            lastY = event.touches[0].clientY
+            return
+        }
+        let deltaY = event.touches[0].clientY - lastY
+        lastY = event.touches[0].clientY
+        // 模拟"wheel"事件
+        var wheelEvent = new WheelEvent("wheel", {
+            deltaX: 0,
+            deltaY: deltaY,
+            deltaMode: WheelEvent.DOM_DELTA_PIXEL,
+            bubbles: true,
+            cancelable: true
+        });
+    })
     ele.addEventListener('wheel', e=> {
+        console.log(e)
         if (lockScroll) {
             return
         }
         chasingSteps = 15
         if (cameraY > -half && e.deltaY > 0 || cameraY < half && e.deltaY < 0) {
             cameraY -= e.deltaY/scale
-            cameraY = Math.max(-half, cameraY)
+            cameraY = Math.max(-half/3*2, cameraY)
         }
-        shouldBlur = cameraY <= -half
+        shouldBlur = cameraY <= -half/3*2
         if (shouldBlur) {
             setTimeout(()=> {
                 starSpeed = starSlow 
@@ -600,9 +625,9 @@ async function setupCanvas() {
                 sound.setVolume( 0.13 );
             starSpeed = starFast
         }
-        panelHeightC = Math.min(1, (-half / 2 - cameraY) / (half / 2))
+        panelHeightC = Math.min(1, (-half/3*2 / 2 - cameraY) / (half / 2))
     })
-    cameraY = half
+    cameraY = half/3*2
     ele.addEventListener('mouseleave', () => {
         auroraNeed = 0
         //starSpeed = 0.001
@@ -624,7 +649,7 @@ async function setupCanvas() {
     function animate(timestamp) {
         requestAnimationFrame(animate);
         //console.log(start)
-        if (!start && first > 0) {
+        if (!start && first > 0 || !updateScene) {
             return
         }
         first --
@@ -668,6 +693,8 @@ function Main() {
     let [soldOut, setSoldout] = useState(false)
     let [msg, setMsg] = useState('hello world')
     let [msgCls, setMsgCls] = useState('opacity-0')
+    let [isPhone, setIsPhone] = useState(false)
+    let [phonectl, setPhoneCtl] = useState(false)
 
     let {data:signer} = useSigner()
     let provider = useProvider()
@@ -717,7 +744,10 @@ function Main() {
                         setIsWhitelisted(false)
                     }
 
-                    providerContract.mintPrice().then(setMintPrice)
+                    try {
+                        //providerContract.mintPrice().then(setMintPrice)
+                    }catch(e){
+                    }
                     let so = updateMintProgress()
                         try {
                             let {fee, isWl} = await signerContract.mintFee(mintAmount, data)
@@ -744,6 +774,9 @@ function Main() {
                 setSlogenGray(400)
             }
         }, 3000)
+        if (window.innerWidth < 400) {
+            setIsPhone(true)
+        }
 
         document.querySelector('#main').addEventListener('wheel', e=> {
             if (lockScroll) {
@@ -784,6 +817,7 @@ function Main() {
         }
         let old = starSpeed
         setBgBlur(false)
+        let up = updateScene
         window.setVolume(0.4)
         lockScroll = true
         chasingSteps = 8
@@ -802,15 +836,23 @@ function Main() {
         window.setVolume(0.2)
         lockScroll = false
         setBgBlur(true)
+        updateScene = up
         showMsg(res, sleep(3000))
     }
 
     return (
         <div id="main" className="bg-black w-full min-h-screen text-white flex flex-col md:flex-row justify-between  cursor-default ">
+            <div className="absolute top-0 col h-full w-full">
+                <div className="basis-1/2 col justify-center items-center">
+                    <span className={`text-center blink text-2xl md:text-6xl norse hover:text-gray-200 transition  duration-700 ${bgShow?'blink':''} ${bgBlur ? 'blur-sm':''}`}>
+                        ZkPenguins on zkSync Era
+                    </span>
+                </div>
+            </div>
             <div className={`front absolute  top-0 w-full h-full flex flex-col justify-between items-center  ${bgBlur ? 'backdrop-blur-sm' : ''} transition duration-700`}>
                 <div className="w-full text-sm md:text-3xl  text-gray-400 ">
                     <div className="w-full text-sm md:text-xl bg-red-100 gap-12 flex flex-col header items-center text-gray-400 ">
-                        <div className="norse p-6 w-full flex flex-row justify-end ">
+                        <div className="norse pt-6 lg:p-6 w-full flex flex-row justify-end ">
                             <div style={{ opacity: panelOp }} className="row gap-6 ">
                                 {isWhitelisted &&
                                 <div className="btn text-accent broder-accent">
@@ -820,9 +862,7 @@ function Main() {
                                 <ZERC20ConnectButton />
                             </div>
                         </div>
-                        <span className={`text-md md:text-6xl norse hover:text-gray-200 transition  duration-700 ${bgShow?'blink':''} ${bgBlur ? 'blur-sm':''}`}>
-                            ZkPenguins on zkSync Era
-                        </span>
+                        
                     </div>
                 </div>
                 <div className="content  w-full h-full blur-none flex flex-col justify-end ">
@@ -839,15 +879,18 @@ function Main() {
                     </div>
 
                     {bgShow &&
-                    <div className="mint-menu w-full h-full flex flex-col justify-end container pb-4" 
+                    <div className="mint-menu w-full h-full flex flex-col justify-between container pb-4" 
                     >
+                        <div className="col h-full justify-center items-center">
 
-                        <div className={`transition duration-500 basis-1/2 flex flex-col px-6 ${bgBlur?'':'blur-sm'} `} style={{
+                            <div className={`w-full text-center norse text-6xl msg ${msgCls}`}>
+                                {msg} 
+                            </div>
+                        </div>
+
+                        <div className={`transition duration-500 flex flex-col px-6 ${bgBlur?'':'blur-sm'} `} style={{
                             opacity: panelOp
                         }}>
-                        <div className={`w-full text-center basis-2/5 norse text-6xl pb-6 msg ${msgCls}`}>
-                            {msg} 
-                        </div>
 
                             <div className="row justify-between russo text-gray-500">
                                 <span>Minted </span>
@@ -857,14 +900,14 @@ function Main() {
                                 <div className="bg-accent rounded-r h-full" style={{ width:`${total > 0? minted/total * factor(minted, total)* 100 : 0}%`, zIndex:999}}/>
                             </div>
                             <div className="w-full h-full row justify-between gap-4 pt-6">
-                                <div className="w-1/2 col justify-center items-center border-gray-500 h-full border-2 p-4 rounded-md">
-                                    <div className=" w-full blur-sm hover:blur-none transition duration-300">
+                                <div className="w-1/2 col justify-center items-center border-gray-500 h-full ">
+                                    <div className=" w-full md:blur-sm hover:blur-none transition duration-300 border-2 p-4 rounded-md">
                                         <Gallery images={images} />
                                     </div>
                                 </div>
-                                <div className="text-gray-400 w-1/2  norse p-4 flex flex-col gap-6 justify-between">
+                                <div className="text-gray-400 w-1/2  norse md:p-4 flex flex-col gap-6 justify-between">
                                     <span className="text-3xl xl:text-6xl">Guide Your Penguin</span>
-                                    <div className="text-xl xl:2xl px-3">
+                                    <div className="text-md md:text-2xl px-3">
                                         {isWhitelisted && 
                                         <p className="text-accent">whitelist : freemint x <span className="text-white">[1]</span> 
                                             {wlClaimed && 
@@ -878,24 +921,24 @@ function Main() {
                                         <p>Max per wallet : <span className="text-white">[4]</span></p>
 
                                     </div>
-                                    <div className="px-3 row between items-center gap-4">
+                                    <div className="px-3 flex flex-col md:flex-row between items-center gap-4">
                                         <div className="row items-center gap-4 w-full">
                                             <MintAmount selectedIdx={mintAmount-1} start={1} end={4} onSelected={ async amount => {
                                                 setMintAmount(amount) 
                                                 setTimeout(updateMintMenu, 100)
                                             }}/>
                                         </div>
-                                        <div className="text-xl w-full text-right">
+                                        <div className="md:text-xl w-full text-right">
                                             total: {utils.formatEther(mintFee)}{isWhitelisted && !wlClaimed &&  <span className="text-green-500">(${utils.formatEther(mintPrice)* (mintAmount)}-${utils.formatEther(mintPrice)})</span>}Ξ
                                         </div>
                                     </div>
-                                    <div className="w-full flex flex-row gap-2 px-2">
+                                    <div className="w-full flex flex-col md:flex-row  gap-2 px-2">
                                         <button className={`mint-btn w-full ${minting? 'cursor-wait':''}` } disabled={(minting || soldOut || paused)}  onClick={onMint}>
                                             {paused ? 'not start' : soldOut? 'sold out': 'mint'}
                                         </button>
-                                        <div className="btn w-full row justify-center">
+                                        <button className="mint-btn w-full row justify-center">
                                             View on Element 
-                                        </div>
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -903,8 +946,28 @@ function Main() {
                     </div>
                     }
 
-                    <div className="russo animate-bounce w-6 h-6">
-                        {(bgShow && !bgBlur && !minting)&&
+                    <div className="russo animate-bounce w-6 h-6" onClick={ e=> {
+                            if (phonectl) {
+                                return
+                            }
+                        setPhoneCtl(true)
+                        setTimeout(async ()=> {
+                            let isOpen = bgBlur
+                            if (isOpen) {
+                                setPanelOp(0)
+                                cameraY = half/3*2
+                            }else {
+                                cameraY = -half/3*2
+                                setPanelOp(1)
+                            }
+                            setBgBlur(!bgBlur)
+                            if (isPhone) {
+                                //updateScene = !updateScene
+                            }
+                            setPhoneCtl(false)
+                        },100)
+                    }}>
+                        {(bgShow && !minting)&&
                         <FontAwesomeIcon className = "ml-2" icon={faCaretDown} size="lg" />
                         }
                     </div>
