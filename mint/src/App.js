@@ -606,7 +606,6 @@ async function setupCanvas() {
         });
     })
     ele.addEventListener('wheel', e=> {
-        console.log(e)
         if (lockScroll) {
             return
         }
@@ -853,7 +852,7 @@ function Main() {
                 <div className="w-full text-sm md:text-3xl  text-gray-400 ">
                     <div className="w-full text-sm md:text-xl bg-red-100 gap-12 flex flex-col header items-center text-gray-400 ">
                         <div className="norse pt-6 lg:p-6 w-full flex flex-row justify-end ">
-                            <div style={{ opacity: panelOp }} className="row md:gap-4 ">
+                            <div style={{ opacity: panelOp }} className="flex flex-col md:flex-row gap-1 md:gap-4 ">
                                 {isWhitelisted &&
                                 <div className="h-fit btn text-accent broder-accent">
                                     whitelist {wlClaimed && "claimed"}
