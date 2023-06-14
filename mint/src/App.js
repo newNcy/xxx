@@ -922,7 +922,7 @@ function Main() {
                                     </div>
                                     <div className="px-3 flex flex-col md:flex-row between items-center gap-4">
                                         <div className="row items-center gap-4 w-full">
-                                            <MintAmount selectedIdx={mintAmount-1} start={1} end={4} onSelected={ async amount => {
+                                            <MintAmount selectedIdx={mintAmount-1} start={1} end={5} onSelected={ async amount => {
                                                 setMintAmount(amount) 
                                                 setTimeout(updateMintMenu, 100)
                                             }}/>
