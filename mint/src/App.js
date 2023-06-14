@@ -153,16 +153,25 @@ function ZERC20ConnectButton(props) {
 
 function MintAmount({ start, end , onSelected, selectedIdx}) {
     const [selected, setSelected] = useState(selectedIdx ? selectedIdx :0);
-  const op = [];
+    const op = [];
 
-  for (let i = start; i <= end; ++i) {
-    op.push(i);
-  }
+    for (let i = start; i <= end; ++i) {
+        op.push(i);
+    }
+
+    if (selected >= op.length) {
+        setSelected(op.length-1)
+    }
+
+    useEffect(()=> {
+        onSelected(op[selected], selected)
+    }, [])
 
   return (
     <div className="row w-full justify-between border-gray-400 border-l-2 border-t-2 border-b-2">
       {op.map((e, i) => (
           <div key={i} className={`border-r-2 w-full text-center transition-all duration-500  ${selected == i? 'bg-white text-gray-700':' hover:bg-gray-500'} `} onClick={e=> {
+              console.log(`i ${i}, selected ${selected}`, op)
               if (selected != i) {
                   setSelected(i)
                   if (onSelected) {
@@ -685,7 +694,7 @@ function Main() {
     let [minting, setMinting] = useState(false)
     let [isWhitelisted, setIsWhitelisted] = useState(false)
     let [proof, setProof] = useState([])
-    let [mintAmount, setMintAmount] = useState(1)
+    let [mintAmount, setMintAmount] = useState(3)
     let [mintFee, setMintFee] = useState(0)
     let [wlClaimed, setWlClaimed] = useState(false)
     let [paused, setPaused] = useState(true)
@@ -695,6 +704,7 @@ function Main() {
     let [isPhone, setIsPhone] = useState(false)
     let [phonectl, setPhoneCtl] = useState(false)
     let [updateFee, setUpdateFee] = useState(false)
+    let [userMinted, setUserMinted] = useState(0)
 
     let {data:signer} = useSigner()
     let provider = useProvider()
@@ -734,10 +744,10 @@ function Main() {
         return p * ((end-start)*2/t) + start
     }
 
-    let upFee = async() => {
+    let upFee = async(amount) => {
         try {
-            let {fee, isWl} = await signerContract.mintFee(mintAmount, proof)
-            if (isWl && fee == mintPrice*mintAmount) {
+            let {fee, isWl} = await signerContract.mintFee(amount, proof)
+            if (isWhitelisted && fee == mintPrice*amount) {
                 setWlClaimed(true)
             } else {
                 setWlClaimed(false)
@@ -750,13 +760,22 @@ function Main() {
     let updateMintMenu = async () => {
         if (signer) {
             try {
-                let {data} = await axios.get(`proof/${await signer.getAddress()}`)
+                let addr = await signer.getAddress()
+                let {data} = await axios.get(`proof/${addr}`)
                 setProof(data)
                 if (data.length> 0) {
                     setIsWhitelisted(true)
+                    upFee(mintAmount)
                 }else {
                     setIsWhitelisted(false)
                     }
+                try {
+                    providerContract.balanceOf(addr).then(e=>{ 
+                        setUserMinted(e.toNumber())
+                        setMintAmount( Math.floor((e.toNumber()+ 1)/2))
+                    })
+                }catch(e) {
+                }
 
                     try {
                         providerContract.mintPrice().then(setMintPrice)
@@ -803,7 +822,7 @@ function Main() {
         }
     }, [slogenGray])
 
-    upFee()
+    //upFee(mintAmount)
     async function onMint() {
         showMsg('Mint start...', sleep(3000))
         if (minting) {
@@ -817,8 +836,7 @@ function Main() {
                 value: mintFee
             })
         }catch(e) {
-            console.log(e)
-            if (e.message)
+            if (e.message && e.data.message)
                 res = e.data.message
         }
         let old = starSpeed
@@ -929,11 +947,11 @@ function Main() {
                                     </div>
                                     <div className="px-3 flex flex-col md:flex-row between items-center gap-4">
                                         <div className="row items-center gap-4 w-full">
-                                            <MintAmount selectedIdx={mintAmount-1} start={1} end={5} onSelected={ async amount => {
+                                            <MintAmount selectedIdx={mintAmount-1} start={1} end={5 - userMinted} onSelected={ async amount => {
                                                 setMintAmount(amount) 
                                                 setUpdateFee(true)
                                                 await sleep(100)
-                                                await upFee()
+                                                await upFee(amount)
                                                 setUpdateFee(false)
                                                 }}/>
                                         </div>
