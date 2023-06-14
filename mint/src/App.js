@@ -671,7 +671,7 @@ async function setupCanvas() {
     animate();
 }
 
-let contract_addr = '0xf5BCB59c1f3a3dB8bF396F18e045A539E5833bC8'
+let contract_addr = '0x02775959eEd00D9eEc48e73A9fec0FdCa89DC8C5'
 
 function Main() {
     let [slogenGray, setSlogenGray] = useState(300)
@@ -917,7 +917,7 @@ function Main() {
                                         </p>
                                         }
                                         <p>mint price : <span className="text-white">[{utils.formatEther(mintPrice)}</span> Ξ]</p>
-                                        <p>Max per wallet : <span className="text-white">[4]</span></p>
+                                        <p>Max per wallet : <span className="text-white">[5]</span></p>
 
                                     </div>
                                     <div className="px-3 flex flex-col md:flex-row between items-center gap-4">
