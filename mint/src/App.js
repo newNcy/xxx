@@ -171,7 +171,6 @@ function MintAmount({ start, end , onSelected, selectedIdx}) {
     <div className="row w-full justify-between border-gray-400 border-l-2 border-t-2 border-b-2">
       {op.map((e, i) => (
           <div key={i} className={`border-r-2 w-full text-center transition-all duration-500  ${selected == i? 'bg-white text-gray-700':' hover:bg-gray-500'} `} onClick={e=> {
-              console.log(`i ${i}, selected ${selected}`, op)
               if (selected != i) {
                   setSelected(i)
                   if (onSelected) {
