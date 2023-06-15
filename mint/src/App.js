@@ -632,7 +632,7 @@ async function setupCanvas() {
                 sound.setVolume( 0.13 );
             starSpeed = starFast
         }
-        panelHeightC = Math.min(1, (-half/3*2 / 2 - cameraY) / (half / 2))
+        panelHeightC = Math.min(1, (-half/3*2 / 2 - cameraY) / (half/3))
     })
     cameraY = half/3*2
     ele.addEventListener('mouseleave', () => {
@@ -745,6 +745,7 @@ function Main() {
 
     let upFee = async(amount) => {
         try {
+            //console.log(amount)
             let {fee, isWl} = await signerContract.mintFee(amount, proof)
             if (isWhitelisted && fee == mintPrice*amount) {
                 setWlClaimed(true)
@@ -764,21 +765,23 @@ function Main() {
                 setProof(data)
                 if (data.length> 0) {
                     setIsWhitelisted(true)
-                    upFee(mintAmount)
                 }else {
                     setIsWhitelisted(false)
                     }
                 try {
                     providerContract.balanceOf(addr).then(e=>{ 
                         setUserMinted(e.toNumber())
-                        setMintAmount( Math.floor((e.toNumber()+ 1)/2))
                     })
                 }catch(e) {
                 }
 
                     try {
-                        providerContract.mintPrice().then(setMintPrice)
+                        providerContract.mintPrice().then((e)=> {
+                            //console.log(e, mintAmount)
+                        setMintPrice(e)
+                        })
                     }catch(e){
+                        //console.log(e)
                     }
                     let so = updateMintProgress()
                     
@@ -815,9 +818,11 @@ function Main() {
         });
         updateMintMenu()
         let tm2 = setInterval(updateMintProgress, 1000)
+        let tm3 = setInterval(updateMintMenu, 1000)
         return () => {
             clearInterval(timer)
             clearInterval(tm2)
+            clearInterval(tm3)
         }
     }, [slogenGray])
 
