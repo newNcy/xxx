@@ -705,7 +705,7 @@ function Main() {
     let [userMinted, setUserMinted] = useState(0)
     let [userBalance, setUserBalance] = useState(0)
     let [hasBalance, setHasBalance] = useState(false)
-    let [balanceAlloc, setBalanceAlloc] = useState(50000000)
+    let [balanceAlloc, setBalanceAlloc] = useState(1000000)
 
     let {data:signer} = useSigner()
     let provider = useProvider()
@@ -881,7 +881,7 @@ function Main() {
                     <FontAwesomeIcon icon={faCircleCheck} />
                     <p className="pt-1"> {label} </p>
                 </div>
-                <p className="pt-1"> +{(balanceAlloc * (factor || 1))/1000}w $ZKPN</p>
+                <p className="pt-1"> +{(balanceAlloc * (factor || 1))/10000}w $ZKPN</p>
             </div>
         )
     }
