@@ -881,7 +881,7 @@ function Main() {
                     <FontAwesomeIcon icon={faCircleCheck} />
                     <p className="pt-1"> {label} </p>
                 </div>
-                <p className="pt-1"> +{(balanceAlloc * (factor || 1))/10000}w $ZKPN</p>
+                <p className="pt-1"> +{(balanceAlloc * (factor || 1))/1000}k $ZKPN</p>
             </div>
         )
     }
