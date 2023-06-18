@@ -267,7 +267,7 @@ async function setupCanvas() {
         sound.setBuffer( buffer );
         sound.setLoop( true );
         sound.setVolume( 0.13 );
-        //sound.play();
+        sound.play();
     });
 
     window.setVolume = function(v) {
@@ -762,7 +762,6 @@ function Main() {
 
     let updateMintMenu = async () => {
         if (signer) {
-            console.log(signer, account, provider)
             try {
                 let addr = await signer.getAddress()
                 let {data} = await axios.get(`proof/${addr}`)
@@ -916,7 +915,7 @@ function Main() {
                                     </div>
                                 </fieldset>
                             </div>
-                            <div  className="flex flex-col md:flex-row gap-1 md:gap-4 ">
+                            <div  className="flex flex-col md:flex-row gap-1 md:gap-4 pt-3">
                                 {isWhitelisted &&
                                         <div className="h-fit btn text-accent broder-accent">
                                         whitelist {wlClaimed && "claimed"}
