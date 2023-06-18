@@ -30,18 +30,40 @@
     z-index:999;
 }
 
+
+.border-with-text {
+  position: relative;
+  border: 2px solid black;
+  padding: 10px;
+  text-align: center;
+
+}
+
+.border-with-text::before {
+  content: "Border Text";
+  position: absolute;
+  top: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: white;
+  padding: 0 10px;
+  font-size:9px;
+}
+
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;
   }
 }
 
+
+
 .row {
-    @apply flex flex-row
+    @apply flex flex-row  items-center
 }
 
 .col {
-    @apply flex flex-col
+    @apply flex flex-col  items-center
 }
 
 .between {

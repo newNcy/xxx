@@ -11,7 +11,9 @@ import SwiperCore, { Autoplay, Navigation } from 'swiper';
 import 'swiper/swiper-bundle.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTwitter, faTelegram , faDiscord } from '@fortawesome/free-brands-svg-icons';
-import { faCopy , faCaretDown} from '@fortawesome/free-solid-svg-icons';
+import { faCopy , faCaretDown, faCircleCheck} from '@fortawesome/free-solid-svg-icons';
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { fas } from '@fortawesome/free-solid-svg-icons'
 
 import * as THREE from 'three';
 
@@ -24,7 +26,7 @@ import {
     darkTheme,
 } from '@rainbow-me/rainbowkit';
 
-import { configureChains, createClient, WagmiConfig, useSigner, useProvider } from "wagmi";
+import { configureChains, createClient, WagmiConfig, useSigner, useProvider, useAccount} from "wagmi";
 import { goerli, zkSync, zkSyncTestnet } from "wagmi/chains";
 import { alchemyProvider } from "wagmi/providers/alchemy";
 import { publicProvider } from "wagmi/providers/public";
@@ -33,6 +35,7 @@ import { Contract, utils , BigNumber} from "ethers";
 const {abi} = require('./abi.json');
 
 SwiperCore.use([Autoplay, Navigation]);
+library.add(fas)
 
 const { chains, provider } = configureChains(
     [zkSync],
@@ -230,10 +233,6 @@ function Gallery({ images, reverse, filter, sort, speed , direction}) {
     );
 }
 
-
-
-
-
 async function setupCanvas() {
     let ele = document.querySelector('#main')
     if (!ele || document.querySelector('#renderer')) {
@@ -268,7 +267,7 @@ async function setupCanvas() {
         sound.setBuffer( buffer );
         sound.setLoop( true );
         sound.setVolume( 0.13 );
-        sound.play();
+        //sound.play();
     });
 
     window.setVolume = function(v) {
@@ -704,9 +703,13 @@ function Main() {
     let [phonectl, setPhoneCtl] = useState(false)
     let [updateFee, setUpdateFee] = useState(false)
     let [userMinted, setUserMinted] = useState(0)
+    let [userBalance, setUserBalance] = useState(0)
+    let [hasBalance, setHasBalance] = useState(false)
+    let [balanceAlloc, setBalanceAlloc] = useState(50000000)
 
     let {data:signer} = useSigner()
     let provider = useProvider()
+    let account = useAccount()
 
     let providerContract = new Contract(contract_addr, abi, provider)
     let signerContract = new Contract(contract_addr, abi, signer)
@@ -759,6 +762,7 @@ function Main() {
 
     let updateMintMenu = async () => {
         if (signer) {
+            console.log(signer, account, provider)
             try {
                 let addr = await signer.getAddress()
                 let {data} = await axios.get(`proof/${addr}`)
@@ -774,6 +778,9 @@ function Main() {
                     })
                 }catch(e) {
                 }
+
+                let balance = await provider.getBalance(addr)
+                setUserBalance(utils.formatEther(balance))
 
                     try {
                         providerContract.mintPrice().then((e)=> {
@@ -867,10 +874,22 @@ function Main() {
         updateScene = up
         showMsg(res, sleep(3000))
     }
+    
+    function AirdropItem({label, fullfill, factor}) {
+        return (
+            <div className={`row gap-1 justify-between w-full ${fullfill ? 'text-accent': ''}`}>
+                <div className="row gap-1">
+                    <FontAwesomeIcon icon={faCircleCheck} />
+                    <p className="pt-1"> {label} </p>
+                </div>
+                <p className="pt-1"> +{(balanceAlloc * (factor || 1))/1000}w $ZKPN</p>
+            </div>
+        )
+    }
 
     return (
         <div id="main" className="bg-black w-full min-h-screen text-white flex flex-col md:flex-row justify-between  cursor-default ">
-            <div className="absolute top-0 col h-full w-full">
+            <div className="absolute top-0 col justify-between h-full w-full">
                 <div className="basis-1/2 col justify-center items-center">
                     <span className={`text-center blink text-2xl md:text-6xl norse hover:text-gray-200 transition  duration-700 ${bgShow?'blink':''} ${bgBlur ? 'blur-sm':''}`}>
                         ZkPenguins on zkSync Era
@@ -880,8 +899,24 @@ function Main() {
             <div className={`front absolute  top-0 w-full h-full flex flex-col justify-between items-center  ${bgBlur ? 'backdrop-blur-sm' : ''} transition duration-700`}>
                 <div className="w-full text-sm md:text-3xl  text-gray-400 ">
                     <div className="w-full text-sm md:text-xl bg-red-100 gap-12 flex flex-col header items-center text-gray-400 ">
-                        <div className="norse pt-6 lg:p-6 w-full flex flex-row justify-end ">
-                            <div style={{ opacity: panelOp }} className="flex flex-col md:flex-row gap-1 md:gap-4 ">
+                        <div style={{ opacity: panelOp }} className="norse pt-6 lg:p-6 w-full flex flex-row justify-between">
+                            <div className="px-2">
+                                <fieldset className="tag russo">
+                                    <legend className="text-sm">
+                                        airdrop
+                                    </legend>
+                                    <div className="col text-sm text-gray-500">
+                                        <AirdropItem label="0.1eth balance" fullfill={userBalance > 0.01}/>
+                                        <AirdropItem label="1 zkPenguin" factor={30} fullfill={userMinted == 1}/>
+                                        <AirdropItem label="2 zkPenguin" factor={30*2.5} fullfill={userMinted== 2}/>
+                                        <AirdropItem label="3 zkPenguin" factor={30*4} fullfill={userMinted == 3}/>
+                                        <AirdropItem label="4 zkPenguin" factor={30*5.5} fullfill={userMinted == 4}/>
+                                        <AirdropItem label="5 zkPenguin" factor={30*7} fullfill={userMinted == 5}/>
+                                        <AirdropItem label="5+ zkPenguin" factor={30*14.5} fullfill={userMinted >5}/>
+                                    </div>
+                                </fieldset>
+                            </div>
+                            <div  className="flex flex-col md:flex-row gap-1 md:gap-4 ">
                                 {isWhitelisted &&
                                         <div className="h-fit btn text-accent broder-accent">
                                         whitelist {wlClaimed && "claimed"}
