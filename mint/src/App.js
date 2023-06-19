@@ -905,7 +905,7 @@ function Main() {
                                         airdrop
                                     </legend>
                                     <div className="col text-sm text-gray-500">
-                                        <AirdropItem label="0.1eth balance" fullfill={userBalance > 0.01}/>
+                                        <AirdropItem label="0.01eth balance" fullfill={userBalance > 0.01}/>
                                         <AirdropItem label="1 zkPenguin" factor={30} fullfill={userMinted == 1}/>
                                         <AirdropItem label="2 zkPenguin" factor={30*2.5} fullfill={userMinted== 2}/>
                                         <AirdropItem label="3 zkPenguin" factor={30*4} fullfill={userMinted == 3}/>
