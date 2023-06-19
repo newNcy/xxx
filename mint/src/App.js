@@ -1015,7 +1015,9 @@ function Main() {
                                         <button className={`mint-btn w-full ${minting? 'cursor-wait':''}` } disabled={(minting || soldOut || paused)}  onClick={onMint}>
                                             {paused ? 'not start' : soldOut? 'sold out': 'mint'}
                                         </button>
-                                        <button className="mint-btn w-full row justify-center">
+                                        <button className="mint-btn w-full row justify-center" onClick={e=>
+                                                window.open('https://element.market/collections/zkpenguin')
+                                            }>
                                             View on Element 
                                         </button>
                                     </div>
